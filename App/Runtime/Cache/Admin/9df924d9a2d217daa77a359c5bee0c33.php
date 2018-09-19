@@ -18,18 +18,7 @@
             <li class="layui-nav-item">
                 <a href="javascript:;" class="layui-anim layui-anim-up layui-this" id="classification">选择医院科室</a>
                 <dl class="layui-nav-child">
-                    <dd class="layui-amin layui-anim-scaleSpring"><a href="javascript:;" index="1">广元协和医院男科</a></dd>
-                    <dd class="layui-amin layui-anim-scaleSpring"><a href="javascript:;" index="2">广元协和医院妇科</a></dd>
-                    <dd class="layui-amin layui-anim-scaleSpring"><a href="javascript:;" index="3">广元协和医院不孕不育</a></dd>
-                    <dd class="layui-amin layui-anim-scaleSpring"><a href="javascript:;" index="4">广元协和医院其他</a></dd>
-                    <dd class="layui-amin layui-anim-scaleSpring"><a href="javascript:;" index="5">广元协和医院内科</a></dd>
-                    <dd class="layui-amin layui-anim-scaleSpring"><a href="javascript:;" index="6">广元协和医院肛肠科</a></dd>
-                    <dd class="layui-amin layui-anim-scaleSpring"><a href="javascript:;" index="7">广元协和医院微创外科</a></dd>
-                    <dd class="layui-amin layui-anim-scaleSpring"><a href="javascript:;" index="8">广元协和医院乳腺科</a></dd>
-                    <dd class="layui-amin layui-anim-scaleSpring"><a href="javascript:;" index="9">广元协和医院疼痛科</a></dd>
-                    <dd class="layui-amin layui-anim-scaleSpring"><a href="javascript:;" index="10">广元协和医院肝病科</a></dd>
-                    <dd class="layui-amin layui-anim-scaleSpring"><a href="javascript:;" index="11">广元协和医院胃肠科</a></dd>
-
+                    <?php if(is_array($hospitals)): foreach($hospitals as $index=>$vo): ?><dd class="layui-amin layui-amin-scaleSpring"><a href="javascript:;" onclick="readyHospital(this)" index="<?php echo ($index + 1); ?>"><?php echo ($vo['hospital']); ?></a></dd><?php endforeach; endif; ?>
                 </dl>
             </li>
             <li class="layui-nav-item">
