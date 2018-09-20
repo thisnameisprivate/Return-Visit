@@ -9,7 +9,6 @@ class IndexController extends Controller {
         $this->display();
     }
     public function visit () {
-        $this->assign('url', "{:U('Admin/Index/visitCheck')}");
         $this->display();
     }
     public function visitCheck () {
@@ -19,9 +18,10 @@ class IndexController extends Controller {
         $json = json_encode($hospitalVisit);
         $jsonVisit = urldecode($json);
         $hospitalVistCount = $hospital->count();
-        $visitList = "{\"code\":0, \"msg\":\"\", \"count\": '{$hospitalVistCount}', 'data':$jsonVisit}";
+        $totalPage = 10;
+        $interval = ceil($hospitalVistCount / $totalPage);
+        $visitList = "{\"code\":0, \"msg\":\"\", \"count\": $interval, \"data\":$jsonVisit}";
         print_r($visitList);
-        return $visitList;
     }
     public function returnId () {
 

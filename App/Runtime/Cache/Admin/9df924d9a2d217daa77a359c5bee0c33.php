@@ -57,7 +57,7 @@
     </div>
 
     <div class="layui-body">
-        <iframe id="iframe" src="<?php echo U('Admin/Index/visit');?>" frameborder="0" id="demoAdmin" style="width: 100%; height: 300px;"></iframe>
+        <iframe id="iframe" src="<?php echo U('Admin/Index/visit');?>" frameborder="0" id="demoAdmin" style="width: 100%; height:100%;"></iframe>
     </div>
 </div>
 
