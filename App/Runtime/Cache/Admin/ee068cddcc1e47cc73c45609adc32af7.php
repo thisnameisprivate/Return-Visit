@@ -10,7 +10,13 @@
     <title>visit</title>
 </head>
 <body>
-<table id="demo" lay-filter="edittable"></table>
+<table id="container" lay-filter="edittable"></table>
+<div class="layui-container" id="layerpopCheck">
+    <p>查看信息弹出窗口</p>
+</div>
+<div class="layui-container" id="layerpopEdit">
+    <p>修改信息弹出窗口</p>
+</div>
 </body>
 <script src="/visit/Public/statics/layui/layui.js"></script>
 <script type="text/html" id="bar">
@@ -19,8 +25,9 @@
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
 </script>
 <script>
-    layui.use('table', () => {
+    layui.use(['table', 'layer', 'form'], () => {
         var table = layui.table;
+        var layer = layui.layer;
         table.render({
             text: {
                 none: '暂无相关数据',
@@ -29,14 +36,16 @@
               field: 'id',
               type: 'desc',
             },
-            id: 'idtest',
-            height:'full-20',
+            elem: '#container',
+            url: "<?php echo U('Admin/Index/visitCheck');?>",
+            height:'full-0',
             even:true,
             cellMinWidth:100,
-            limit: 10,
+            page: true,
+            limit: 25,
+            limits: [25, 40, 60, 90, 150, 200],
+            loading: true,
             size: 'sm',
-            elem: '#demo',
-            url: "<?php echo U('Admin/Index/visitCheck');?>",
             cols: [[
                 {type: 'checkbox'},
                 {field: 'id', title: 'No . ', width:80, sort: true}
@@ -52,24 +61,44 @@
             ]],
             id: 'edittable',
             done: (res, curr, count) => {
-                console.log(res);
-                console.log(curr);
-                console.log(count);
             }
         });
         table.on('tool(edittable)', obj => {
             var data = obj.data;
+            console.log(data);
             var layEvent = obj.event;
             var tr = obj.tr;
             if (layEvent === 'detail') {
-                layer.msg('onclick select');
-            } else if (layEvent === 'del') {
-                layer.confirm('do you delete source?', (index) => {
-                    console.log(index);
-                    obj.del();
-                    layer.close(index);
+                layer.open({
+                    type: 1,
+                    title: '查看信息',
+                    area: ['900px', '600px'],
+                    content: document.getElementById('layerpopCheck').innerHTML,
                 })
+            } else if (layEvent === 'del') {
+                layer.confirm('【 ' + data.name + ' 】do you delete source?', (index) => {
+                    var client = new XMLHttpRequest();
+                    client.open("GET", "<?php echo U('Admin/Index/delete/id/" + parseInt(data.id) + "');?>");
+                    client.send();
+                    client.onreadystatechange = () => {
+                        if (client.readyState === 4 && client.status === 200) {
+                            if (client.response == 1) {
+                                layer.msg('delete success', {icon: 6});
+                                obj.del();
+                                layer.close(index);
+                            } else {
+                                layer.msg('delete fialed', {icon: 5});
+                            }
+                        }
+                    }
+                });
             } else if (layEvent === 'edit') {
+                layer.open({
+                    type: 1,
+                    title: '编辑信息',
+                    area: ['900px', '600px'],
+                    content: document.getElementById('layerpopEdit').innerHTML,
+                });
                 obj.update({
 
                 })
