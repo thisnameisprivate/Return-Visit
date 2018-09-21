@@ -11,11 +11,72 @@
 </head>
 <body>
 <table id="container" lay-filter="edittable"></table>
-<div class="layui-container" id="layerpopCheck">
+<div class="layui-container" id="layerpopCheck" style="display:none;">
     <p>查看信息弹出窗口</p>
 </div>
-<div class="layui-container" id="layerpopEdit">
-    <p>修改信息弹出窗口</p>
+<div class="layui-container" id="layerpopEdit" style="display:none;">
+    <form action="" class="layui-form" lay-filter="formedit">
+        <div class="layui-form-item">
+            <label class="layui-form-label">状态</label>
+            <div class="layui-input-inline">
+                <input type="text" name="status" autocomplete="off" class="layui-input">
+            </div>
+            <label class="layui-form-label">咨询电话</label>
+            <div class="layui-input-inline">
+                <input type="text" name="phone" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">客户电话</label>
+            <div class="layui-input-inline">
+                <input type="text" name="clientPhone" autocomplete="off" class="layui-input">
+            </div>
+            <label class="layui-form-label">客服姓名</label>
+            <div class="layui-input-inline">
+                <select name="name" lay-verify="required">
+                    <option value=""></option>
+                    <option value="0">北京</option>
+                    <option value="1">上海</option>
+                    <option value="2">广州</option>
+                    <option value="3">深圳</option>
+                    <option value="4">杭州</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">就诊项目</label>
+            <div class="layui-input-inline">
+                <div class="layui-input-inline">
+                    <select name="options" lay-verify="required">
+                        <option value=""></option>
+                        <option value="0">北京</option>
+                        <option value="1">上海</option>
+                        <option value="2">广州</option>
+                        <option value="3">深圳</option>
+                        <option value="4">杭州</option>
+                    </select>
+                </div>
+            </div>
+            <label class="layui-form-label">回访状态</label>
+            <div class="layui-input-inline">
+                <div class="layui-input-inline">
+                    <select name="visitStatus" lay-verify="required">
+                        <option value="0">等待回访</option>
+                        <option value="1">已回访</option>
+                        <option value="2">全流失</option>
+                        <option value="3">半流失</option>
+                        <option value="4">已预约</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">消费金额</label>
+            <div class="layui-input-inline">
+                <input type="text" name="money" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+    </form>
 </div>
 </body>
 <script src="__PUBLIC__/statics/layui/layui.js"></script>
@@ -28,6 +89,7 @@
     layui.use(['table', 'layer', 'form'], () => {
         var table = layui.table;
         var layer = layui.layer;
+        var form = layui.form;
         table.render({
             text: {
                 none: '暂无相关数据',
@@ -52,7 +114,7 @@
                 ,{field: 'status', title: '状态', width:80}
                 ,{field: 'phone', title: '咨询电话', width:177}
                 ,{field: 'clientPhone', title: '客户电话', width:177}
-                ,{field: 'name', title: '名字', width: 100}
+                ,{field: 'name', title: '客服姓名', width: 100}
                 ,{field: 'options', title: '就诊项目', width: 80}
                 ,{field: 'visitStatus', title: '回访状态', width: 100}
                 ,{field: 'money', title: '消费金额', width: 177, sort: true}
@@ -68,14 +130,14 @@
             console.log(data);
             var layEvent = obj.event;
             var tr = obj.tr;
-            if (layEvent === 'detail') {
+            if (layEvent === 'detail') { // check tool data
                 layer.open({
                     type: 1,
                     title: '查看信息',
                     area: ['900px', '600px'],
                     content: document.getElementById('layerpopCheck').innerHTML,
                 })
-            } else if (layEvent === 'del') {
+            } else if (layEvent === 'del') { // delete tool data
                 layer.confirm('【 ' + data.name + ' 】do you delete source?', (index) => {
                     var client = new XMLHttpRequest();
                     client.open("GET", "{:U('Admin/Index/delete/id/" + parseInt(data.id) + "')}");
@@ -92,18 +154,32 @@
                         }
                     }
                 });
-            } else if (layEvent === 'edit') {
+            } else if (layEvent === 'edit') { // edit tool data
                 layer.open({
                     type: 1,
                     title: '编辑信息',
                     area: ['900px', '600px'],
                     content: document.getElementById('layerpopEdit').innerHTML,
                 });
+                setFormValue(data);
                 obj.update({
 
                 })
             }
-        })
-    })
+        });
+        /* 渲染form表单 */
+        function setFormValue (data) {
+            form.val('formedit', {
+                'status': data.status,
+                'phone': data.phone,
+                'clientPhone': data.clientPhone,
+                'name': data.name,
+                'options': data.options,
+                'visitStatus': data.visitStatus,
+                'money': data.money,
+            });
+            form.render();
+        }
+    });
 </script>
 </html>

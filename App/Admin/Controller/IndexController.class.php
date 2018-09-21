@@ -14,6 +14,58 @@ class IndexController extends Controller {
         $this->display();
     }
     /*
+     *  @@ department system page
+     * */
+    public function departMent () {
+        $this->display();
+    }
+    /*
+     *  @@ departMent system rendering
+     *  @param null
+     *  return departMent Type: josn
+     * */
+    public function departmentRender () {
+        $departMent = M('hospital');
+        $dpeartMents = $departMent->select();
+        $departMentCount = $departMent->count();
+        $this->arrayRecursive($dpeartMents, 'urlencode', true);
+        $jsonDepart = urldecode(json_encode($dpeartMents));
+        $departList = "{\"code\":0, \"msg\":\"\", \"count\": $departMentCount, \"data\":$jsonDepart}";
+        $this->ajaxReturn($departList, 'eval');
+    }
+    /*
+     *  @@ delete department
+     *  @param null
+     *  return true or false
+     * */
+    public function delDepartMent () {
+        if (! is_numeric($_GET['id'])) return false;
+        $id = $_GET['id'];
+        $delData = M('hospital');
+        $resolve = $delData->where("id = $id")->delete();
+        if ($resolve) {
+            $this->ajaxReturn(true, 'eval');
+        } else {
+            $this->ajaxReturn(false, 'eval');
+        }
+    }
+    /*
+     *  @@ add department
+     *  @param null
+     *  return true of false
+     * */
+    public function addDepartMent () {
+        $hospital = json_decode($_GET['hospital'],true);
+        $hospital['hospital'] = $hospital['hospital'];
+        $hospitals = M('hospital');
+        $hospitals->add($hospital);
+        if ($hospital) {
+            $this->ajaxReturn(true, 'eval');
+        } else {
+            $this->ajaxReturn(false, 'eval');
+        }
+    }
+    /*
      *  @@ login success
      *  @Pparam null
      *  return display
