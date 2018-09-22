@@ -9,7 +9,7 @@ class IndexController extends Controller {
      * */
     public function index () {
         $hospital = M('hospital');
-        $hospitals = $hospital->field('hospital')->select();
+        $hospitals = $hospital->field(array('hospital', 'tableName'))->select();
         $this->assign('hospitals', $hospitals);
         $this->display();
     }
@@ -74,12 +74,20 @@ class IndexController extends Controller {
         $this->display();
     }
     /*
+     *  首页
+     * */
+    public function echarts () {
+        $this->display();
+    }
+    /*
      *  @@ interval page
      *  @param null
      *  return $visitList Type: json
      * */
     public function visitCheck () {
-        $hospital = M('nkvisit');
+        $cookieTable = cookie('tableName');
+        if ($cookieTable == '') $this->ajaxReturn('数据查询异常', 'eval');
+        $hospital = M($cookieTable);
         $page = $_GET['page'];
         $hospitalVistCount = $hospital->count();
         $totalPage = 25;

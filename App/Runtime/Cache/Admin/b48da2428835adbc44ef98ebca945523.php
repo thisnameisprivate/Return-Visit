@@ -39,7 +39,7 @@
         var table = layui.table;
         var layer = layui.layer;
         var form = layui.form;
-        table.render({
+        var tableIns = table.render({
             text: {
                 none: "暂无相关数据",
             },
@@ -103,6 +103,7 @@
                         if (client.response == 1) {
                             layer.msg('add success', {icon: 6});
                             layer.closeAll('page');
+                            tableIns.reload();
                         } else {
                             layer.msg('add failed', {icon: 5});
                         }

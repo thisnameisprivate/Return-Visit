@@ -18,7 +18,9 @@
             <li class="layui-nav-item">
                 <a href="javascript:;" class="layui-anim layui-anim-up layui-this" id="classification">选择医院科室</a>
                 <dl class="layui-nav-child">
-                    <?php if(is_array($hospitals)): foreach($hospitals as $index=>$vo): ?><dd class="layui-amin layui-amin-scaleSpring"><a href="javascript:;" onclick="readyHospital(this)" index="<?php echo ($index + 1); ?>"><?php echo ($vo['hospital']); ?></a></dd><?php endforeach; endif; ?>
+
+                    <?php if(is_array($hospitals)): foreach($hospitals as $index=>$vo): ?><dd class="layui-amin layui-anim-scaleSpring"><a href="javascript:;" onclick="readyHospital(this);" tableName="<?php echo ($vo['tableName']); ?>"><?php echo ($vo['hospital']); ?></a></dd><?php endforeach; endif; ?>
+
                 </dl>
             </li>
             <li class="layui-nav-item">
@@ -27,7 +29,7 @@
                     贤心
                 </a>
             </li>
-            <li class="layui-nav-item"><a href="">退了</a></li>
+            <li class="layui-nav-item"><a href="">注销</a></li>
         </ul>
     </div>
 
@@ -35,21 +37,21 @@
         <div class="layui-side-scroll">
             <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
             <ul class="layui-nav layui-nav-tree"  lay-filter="test">
-                <li class="layui-nav-item" id="edit">
+                <li class="layui-nav-item tableName" onclick="editdata(this);">
                     <a href="javascript:;">回访数据总览</a>
                 </li>
-                <li class="layui-nav-item layui-nav-itemed" id="charts">
+                <li class="layui-nav-item layui-nav-itemed tableName" id="charts">
                     <a class="" href="javascript:;">回访趋势图</a>
                 </li>
-                <li class="layui-nav-item layui-nav-itemed" id="departMent">
+                <li class="layui-nav-item layui-nav-itemed tableName" onclick="departMent(this);">
                     <a href="javascript:;">医院科室管理</a>
                 </li>
                 <li class="layui-nav-item">
                     <a href="javascript:;">按条件查询</a>
                     <dl class="layui-nav-child">
-                        <dd><a href="javascript:;" id="nameSearch">按名字查询</a></dd>
-                        <dd><a href="javascript:;" id="dateSearch">按日期查询</a></dd>
-                        <dd><a href="javascript:;" id="statuSerach">按就诊状态查询</a></dd>
+                        <dd class="tableName"><a href="javascript:;">按名字查询</a></dd>
+                        <dd class="tableName"><a href="javascript:;">按日期查询</a></dd>
+                        <dd class="tableName"><a href="javascript:;">按就诊状态查询</a></dd>
                     </dl>
                 </li>
             </ul>
@@ -57,7 +59,7 @@
     </div>
 
     <div class="layui-body">
-        <iframe id="iframe" src="<?php echo U('Admin/Index/visit');?>" frameborder="0" id="demoAdmin" style="width: 100%; height:100%;"></iframe>
+        <iframe id="iframe" src="<?php echo U('Admin/Index/echarts');?>" frameborder="0" id="demoAdmin" style="width: 100%; height:100%;"></iframe>
     </div>
 </div>
 
@@ -70,10 +72,8 @@
 <script>
     layui.use(['element', 'layer', 'form'], () => {
         var layer = layui.layer;
-        var departMent = document.getElementById('departMent');
-        var edit = document.getElementById('edit');
         layer.msg("Please Select Hospital.");
-        departMent.onclick = () => {
+        departMent = tableName => {
             var Request = new XMLHttpRequest();
             Request.open('GET', "<?php echo U('Admin/Index/departMent');?>");
             Request.send();
@@ -81,12 +81,26 @@
                 document.getElementById('iframe').setAttribute('src', "<?php echo U('Admin/Index/departMent');?>");
             }
         }
-        edit.onclick = () => {
+        editdata = tableName => {
+            var tableName = tableName.getAttribute('tableName');
+            if (! tableName != '') {
+                layer.msg('请先选择科室', {icon: 5});
+                return false;
+            }
+            document.cookie = "tableName=" + tableName;
             var Request = new XMLHttpRequest();
             Request.open('GET', "<?php echo U('Admin/Index/visit');?>");
             Request.send();
             Request.onreadystatechange = () => {
                 document.getElementById('iframe').setAttribute('src', "<?php echo U('Admin/Index/visit');?>");
+            }
+        }
+        readyHospital = tableName => {
+            var ification = document.getElementById('classification');
+            var selects = document.getElementsByClassName('tableName');
+            ification.innerHTML = tableName.innerText + "<span class='layui-nav-more'></span>";
+            for (var i = 0; i < selects.length; i ++) {
+                selects[i].setAttribute('tableName', tableName.getAttribute('tableName'));
             }
         }
     })
