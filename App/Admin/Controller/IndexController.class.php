@@ -56,7 +56,6 @@ class IndexController extends Controller {
      * */
     public function addDepartMent () {
         $hospital = json_decode($_GET['hospital'],true);
-        $hospital['hospital'] = $hospital['hospital'];
         $hospitals = M('hospital');
         $hospitals->add($hospital);
         if ($hospital) {
@@ -86,7 +85,11 @@ class IndexController extends Controller {
      * */
     public function visitCheck () {
         $cookieTable = cookie('tableName');
-        if ($cookieTable == '') $this->ajaxReturn('数据查询异常', 'eval');
+        if ($cookieTable == '') return false;
+        $isTable = M()->query("show tables like '{$cookieTable}'");
+        if (! $isTable) {
+            if (! $this->createTable($cookieTable)) return false;
+        }
         $hospital = M($cookieTable);
         $page = $_GET['page'];
         $hospitalVistCount = $hospital->count();
@@ -96,6 +99,10 @@ class IndexController extends Controller {
         $jsonVisit = urldecode(json_encode($hospitalVisit));
         $interval = ceil($hospitalVistCount / $totalPage);
         $visitList = "{\"code\":0, \"msg\":\"\", \"count\": $hospitalVistCount, \"data\":$jsonVisit}";
+        $diseases = M('alldiseases');
+        $diseasesList = $diseases->where("tableName = '{$cookieTable}'")->field('diseases')->select();
+        $this->arrayRecursive($diseasesList, 'urlencode', true);
+        setcookie('disease', urldecode(json_encode($diseasesList)));
         $this->ajaxReturn($visitList, 'eval');
     }
     /*
@@ -130,6 +137,22 @@ class IndexController extends Controller {
             $this->ajaxReturn($response, 'eval');
         } else {
             $this->ajaxReturn('not find value:0');
+        }
+    }
+    /*
+     *  @@ add tool data
+     *  @param null
+     *  return tool data
+     * */
+    public function addData () {
+        $data = json_decode($_GET['data'],true);
+        $cookie = cookie('tableName');
+        $datas = M($cookie);
+        $datas->add($data);
+        if ($data) {
+            $this->ajaxReturn(true, 'eval');
+        } else {
+            $this->ajaxReturn(false, 'eval');
         }
     }
     /*
@@ -178,5 +201,28 @@ class IndexController extends Controller {
             }
         }
         $recursive_counter--;
+    }
+    /*
+     *  create new table
+     *  @param tableName
+     *  return true or false
+     * */
+    public function createTable ($tableName) {
+        $sql = <<<sql
+                CREATE TABLE `$tableName` (
+                `id` int AUTO_INCREMENT,
+                `status` integer NOT NULL DEFAULT 0,
+                `phone` varchar(20) NOT NULL,
+                `clientPhone` varchar(20) NOT NULL,
+                `name` varchar(20) NOT NULL,
+                `options` varchar(20) NOT NULL,
+                `money` integer NOT NULL DEFAULT 0,
+                `username` varchar(20) NOT NULL DEFAULT 0,
+                `addtime` timestamp DEFAULT CURRENT_TIMESTAMP,
+                PRIMARY KEY (`id`)
+                ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;	
+sql;
+        if (M()->query($sql)) return true;
+        return false;
     }
 }

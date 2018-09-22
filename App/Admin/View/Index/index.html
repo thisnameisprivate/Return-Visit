@@ -90,6 +90,7 @@
                 return false;
             }
             document.cookie = "tableName=" + tableName;
+            var Promise = new Promise()
             var Request = new XMLHttpRequest();
             Request.open('GET', "{:U('Admin/Index/visit')}");
             Request.send();
