@@ -161,7 +161,7 @@
         </form>
     </div>
 </div>
-<div><?php print_r(json_decode($_COOKIE['disease'])); ?></div>
+<div><?php echo (cookie('disease')); ?></div>
 </body>
 <script src="/visit/Public/statics/layui/layui.js"></script>
 <script type="text/html" id="toolbaradd">

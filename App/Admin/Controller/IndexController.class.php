@@ -73,7 +73,7 @@ class IndexController extends Controller {
         $this->display();
     }
     /*
-     *  首页
+     *  Home page
      * */
     public function echarts () {
         $this->display();

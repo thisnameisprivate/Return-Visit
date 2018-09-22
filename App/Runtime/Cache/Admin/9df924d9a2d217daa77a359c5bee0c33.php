@@ -87,13 +87,25 @@
                 layer.msg('请先选择科室', {icon: 5});
                 return false;
             }
-            document.cookie = "tableName=" + tableName;
-            var Request = new XMLHttpRequest();
-            Request.open('GET', "<?php echo U('Admin/Index/visit');?>");
-            Request.send();
-            Request.onreadystatechange = () => {
-                document.getElementById('iframe').setAttribute('src', "<?php echo U('Admin/Index/visit');?>");
-            }
+            var promise = new Promise((resolve, reject) => {
+                document.cookie = "tableName=" + tableName;
+                if (document.cookie.indexOf(tableName) != -1) {
+                    resolve();
+                } else {
+                    return reject('set cookie failed');
+                }
+            });
+            promise.then(resolve => {
+                var Request = new XMLHttpRequest();
+                Request.open('GET', "<?php echo U('Admin/Index/visit');?>");
+                Request.send();
+                Request.onreadystatechange = () => {
+                    document.getElementById('iframe').setAttribute('src', "<?php echo U('Admin/Index/visit');?>");
+                }
+            }, reject => {
+                layer.msg(reject, {icon: 5});
+                return false;
+            })
         }
         readyHospital = tableName => {
             var ification = document.getElementById('classification');
