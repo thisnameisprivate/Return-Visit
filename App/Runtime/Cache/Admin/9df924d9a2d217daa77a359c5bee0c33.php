@@ -43,15 +43,12 @@
                 <li class="layui-nav-item layui-nav-itemed tableName" id="charts">
                     <a class="" href="javascript:;">回访趋势图</a>
                 </li>
-                <li class="layui-nav-item layui-nav-itemed tableName" onclick="departMent(this);">
-                    <a href="javascript:;">医院科室管理</a>
-                </li>
                 <li class="layui-nav-item">
-                    <a href="javascript:;">按条件查询</a>
+                    <a href="javascript:;">系统管理</a>
                     <dl class="layui-nav-child">
-                        <dd class="tableName"><a href="javascript:;">按名字查询</a></dd>
-                        <dd class="tableName"><a href="javascript:;">按日期查询</a></dd>
-                        <dd class="tableName"><a href="javascript:;">按就诊状态查询</a></dd>
+                        <dd class="tableName" onclick="custservice();"><a href="javascript:;">客服管理</a></dd>
+                        <dd class="tableName" onclick="departMent(this);"><a href="javascript:;">科室管理</a></dd>
+                        <dd class="tableName" onclick="user();"><a href="javascript:;">用户管理</a></dd>
                     </dl>
                 </li>
             </ul>
@@ -88,7 +85,6 @@
                 return false;
             }
             var promise = new Promise((resolve, reject) => {
-                document.cookie = "tableName=" + tableName;
                 if (document.cookie.indexOf(tableName) != -1) {
                     resolve();
                 } else {
@@ -107,6 +103,22 @@
                 return false;
             })
         }
+        custservice = () => {
+            var Request = new XMLHttpRequest();
+            Request.open('GET', "<?php echo U('Admin/Index/custservice');?>");
+            Request.send();
+            Request.onreadystatechange = () => {
+                document.getElementById('iframe').setAttribute('src', "<?php echo U('Admin/Index/custservice');?>");
+            }
+        }
+        user = () => {
+            var Request = new XMLHttpRequest();
+            Request.open('GET', "<?php echo U('Admin/Index/user');?>");
+            Request.send();
+            Request.onreadystatechange = () => {
+                document.getElementById('iframe').setAttribute('src', "<?php echo U('Admin/Index/user');?>");
+            }
+        }
         readyHospital = tableName => {
             var ification = document.getElementById('classification');
             var selects = document.getElementsByClassName('tableName');
@@ -114,6 +126,8 @@
             for (var i = 0; i < selects.length; i ++) {
                 selects[i].setAttribute('tableName', tableName.getAttribute('tableName'));
             }
+            document.cookie = "tableName=" + tableName.getAttribute('tableName');
+            console.log(tableName.getAttribute('tableName'));
         }
     })
 </script>

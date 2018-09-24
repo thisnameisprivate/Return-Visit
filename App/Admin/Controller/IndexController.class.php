@@ -57,8 +57,112 @@ class IndexController extends Controller {
     public function addDepartMent () {
         $hospital = json_decode($_GET['hospital'],true);
         $hospitals = M('hospital');
-        $hospitals->add($hospital);
-        if ($hospital) {
+        $resolve = $hospitals->add($hospital);
+        if ($resolve) {
+            $this->ajaxReturn(true, 'eval');
+        } else {
+            $this->ajaxReturn(false, 'eval');
+        }
+    }
+    /*
+     *  customser service page
+     * */
+    public function custservice () {
+        $this->display();
+    }
+    /*
+     *  customser service data
+     *  @param null
+     *  return $customerList Type: json
+     * */
+    public function custserviceCheck () {
+        $customer = M('custservice');
+        $custservice = $customer->select();
+        $customerCount = $customer->count();
+        $this->arrayRecursive($custservice, 'urlencode', true);
+        $jsonCustomer = urldecode(json_encode($custservice));
+        $customerList = "{\"code\":0, \"msg\":\"\", \"count\": $customerCount, \"data\":$jsonCustomer}";
+        $this->ajaxReturn($customerList, 'eval');
+    }
+    /*
+     *  customer service delte
+     *  @param null
+     *  return ture or false
+     * */
+    public function custserviceDelete () {
+        if (! is_numeric($_GET['id'])) return false;
+        $id = $_GET['id'];
+        $delData = M('custservice');
+        $resolve = $delData->where("id = $id")->delete();
+        if ($resolve) {
+            $this->ajaxReturn(true, 'eval');
+        } else {
+            $this->ajaxReturn(false, 'eval');
+        }
+    }
+    /*
+     *  customer service add
+     *  @param null
+     *  return ture or false
+     * */
+    public function custserviceAdd () {
+        $cusomerService = json_decode($_GET['custservice'],true);
+        $cusomer = M('custservice');
+        $resolve = $cusomer->add($cusomerService);
+        if ($resolve) {
+            $this->ajaxReturn(true, 'eval');
+        } else {
+            $this->ajaxReturn(false, 'eval');
+        }
+    }
+    /*
+     *  user page
+     * */
+    public function user () {
+        $this->display();
+    }
+    /*
+     *  user data
+     *  @param null
+     *  return userList
+     * */
+    public function userCheck () {
+        $customer = M('user');
+        $user = $customer->select();
+        $userCont = $customer->count();
+        $this->arrayRecursive($user, 'urlencode', true);
+        $jsonUser = urldecode(json_encode($user));
+        $userList = "{\"code\":0, \"msg\":\"\", \"count\": $userCont, \"data\":$jsonUser}";
+        $this->ajaxReturn($userList, 'eval');
+    }
+    /*
+     *  user delete
+     *  @param null
+     *  return true or false
+     * */
+    public function userDelete () {
+        if (! is_numeric($_GET['id'])) return false;
+        $id = $_GET['id'];
+        $delData = M('user');
+        $resolve = $delData->where("id = $id")->delete();
+        if ($resolve) {
+            $this->ajaxReturn(true, 'eval');
+        } else {
+            $this->ajaxReturn(false, 'eval');
+        }
+    }
+    /*
+     *  user add
+     *  @param null
+     *  return true or false
+     * */
+    public function userAdd () {
+        $userList = json_decode($_GET['user'],true);
+        $userList['username'] = $userList['username'];
+        $userList['password'] = md5($userList['password']);
+        $user = M('user');
+        $resolve = $user->add($userList);
+        if ($resolve) {
             $this->ajaxReturn(true, 'eval');
         } else {
             $this->ajaxReturn(false, 'eval');
@@ -70,6 +174,28 @@ class IndexController extends Controller {
      *  return display
      * */
     public function visit () {
+        $cookieTable = cookie('tableName');
+        if ($cookieTable == '') return false;
+        $isTable = M()->query("show tables like '{$cookieTable}'");
+        if (! $isTable) {
+            // Create table, return true or false
+            if (! $this->createTable($cookieTable)) return false;
+        }
+        $diseases = M('alldiseases');
+        $diseasesList = $diseases->where("tableName = '{$cookieTable}'")->field('diseases')->select();
+        $this->assign('diseasesList', $diseasesList);
+        // select * from status
+        $status = M('status');
+        $statusValue = $status->select();
+        $this->assign('statusValue', $statusValue);
+        // select * from visitstatus
+        $visitstatus = M('visitstatus');
+        $visitstatusValue = $visitstatus->select();
+        $this->assign('visitstatusValue', $visitstatusValue);
+        // select * from custservice
+        $custservice = M('custservice');
+        $custservices = $custservice->select();
+        $this->assign('custservices', $custservices);
         $this->display();
     }
     /*
@@ -85,11 +211,6 @@ class IndexController extends Controller {
      * */
     public function visitCheck () {
         $cookieTable = cookie('tableName');
-        if ($cookieTable == '') return false;
-        $isTable = M()->query("show tables like '{$cookieTable}'");
-        if (! $isTable) {
-            if (! $this->createTable($cookieTable)) return false;
-        }
         $hospital = M($cookieTable);
         $page = $_GET['page'];
         $hospitalVistCount = $hospital->count();
@@ -99,10 +220,6 @@ class IndexController extends Controller {
         $jsonVisit = urldecode(json_encode($hospitalVisit));
         $interval = ceil($hospitalVistCount / $totalPage);
         $visitList = "{\"code\":0, \"msg\":\"\", \"count\": $hospitalVistCount, \"data\":$jsonVisit}";
-        $diseases = M('alldiseases');
-        $diseasesList = $diseases->where("tableName = '{$cookieTable}'")->field('diseases')->select();
-        $this->arrayRecursive($diseasesList, 'urlencode', true);
-        setcookie('disease', urldecode(json_encode($diseasesList)));
         $this->ajaxReturn($visitList, 'eval');
     }
     /*

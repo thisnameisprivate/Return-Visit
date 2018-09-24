@@ -103,12 +103,7 @@
                 <label class="layui-form-label">客服姓名</label>
                 <div class="layui-input-inline">
                     <select name="name" lay-verify="required">
-                        <option value=""></option>
-                        <option value="0">北京</option>
-                        <option value="1">上海</option>
-                        <option value="2">广州</option>
-                        <option value="3">深圳</option>
-                        <option value="4">杭州</option>
+                        <?php if(is_array($custservices)): foreach($custservices as $index=>$vo): ?><option value="<?php echo ($index); ?>"><?php echo ($vo['custservice']); ?></option><?php endforeach; endif; ?>
                     </select>
                 </div>
             </div>
@@ -117,11 +112,7 @@
                 <div class="layui-input-inline">
                     <div class="layui-input-inline">
                         <select name="visitStatus" lay-verify="required">
-                            <option value="0">等待回访</option>
-                            <option value="1">已回访</option>
-                            <option value="2">全流失</option>
-                            <option value="3">半流失</option>
-                            <option value="4">已预约</option>
+                            <?php if(is_array($visitstatusValue)): foreach($visitstatusValue as $index=>$vo): ?><option value="<?php echo ($index); ?>"><?php echo ($vo['visitstatus']); ?></option><?php endforeach; endif; ?>
                         </select>
                     </div>
                 </div>
@@ -129,11 +120,7 @@
                 <div class="layui-input-inline">
                     <div class="layui-input-inline">
                         <select name="status" lay-verify="required">
-                            <option value="0">等待回访</option>
-                            <option value="1">已回访</option>
-                            <option value="2">全流失</option>
-                            <option value="3">半流失</option>
-                            <option value="4">已预约</option>
+                            <?php if(is_array($statusValue)): foreach($statusValue as $index=>$vo): ?><option value="<?php echo ($index); ?>"><?php echo ($vo['status']); ?></option><?php endforeach; endif; ?>
                         </select>
                     </div>
                 </div>
@@ -161,7 +148,6 @@
         </form>
     </div>
 </div>
-<div><?php echo (cookie('disease')); ?></div>
 </body>
 <script src="/visit/Public/statics/layui/layui.js"></script>
 <script type="text/html" id="toolbaradd">
