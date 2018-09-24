@@ -9,11 +9,15 @@
     <link rel="stylesheet" href="/visit/App/Admin/Public/css/visit.css">
     <style>
         .container{position:relative; width:900px; height: 500px; top:0; left:0; bottom:0; right:0; margin:auto; padding-top: 50px;}
+        body{overflow-y: scroll; margin-left:20px; margin-top:20px;}
     </style>
     <title>visit</title>
 </head>
 <body>
-<div><?php echo ($tableName); ?></div>
+<div class="layui-inline">
+    <input class="layui-input" name="search" id="search" placeholder="请输入要搜索的信息~" autocomplete="off">
+</div>
+<button class="layui-btn" data-type="reload">搜索</button>
 <table id="container" lay-filter="edittable"></table>
 <div class="layui-container" id="layerpopCheck" style="display:none;">
     <p>查看信息弹出窗口</p>
@@ -21,55 +25,41 @@
 <div class="layui-container" id="layerpopEdit" style="display:none;">
     <form class="layui-form" lay-filter="formedit">
         <div class="layui-form-item">
-            <label class="layui-form-label">状态</label>
+            <label class="layui-form-label">回访目标</label>
             <div class="layui-input-inline">
-                <input type="text" name="status" autocomplete="off" class="layui-input">
+                <input type="text" name="username" lay-veify="required" placeholder="请输入病人名字或昵称~" autocomplete="off" class="layui-input">
             </div>
-            <label class="layui-form-label">咨询电话</label>
+            <label class="layui-form-label">回访电话</label>
             <div class="layui-input-inline">
-                <input type="text" name="phone" autocomplete="off" class="layui-input">
+                <input type="text" name="clientPhone" lay-verify="phone" placeholder="请输入病人联系方式~" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label">客户电话</label>
+            <label class="layui-form-label">客服电话</label>
             <div class="layui-input-inline">
-                <input type="text" name="clientPhone" autocomplete="off" class="layui-input">
+                <input type="text" name="phone" lay-verify="phone" placeholder="请输入客服小姐姐电话~" autocomplete="off" class="layui-input">
             </div>
             <label class="layui-form-label">客服姓名</label>
             <div class="layui-input-inline">
                 <select name="name" lay-verify="required">
-                    <option value=""></option>
-                    <option value="0">北京</option>
-                    <option value="1">上海</option>
-                    <option value="2">广州</option>
-                    <option value="3">深圳</option>
-                    <option value="4">杭州</option>
+                    <?php if(is_array($custservices)): foreach($custservices as $index=>$vo): ?><option value="<?php echo ($index); ?>"><?php echo ($vo['custservice']); ?></option><?php endforeach; endif; ?>
                 </select>
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label">就诊项目</label>
-            <div class="layui-input-inline">
-                <div class="layui-input-inline">
-                    <select name="options" lay-verify="required">
-                        <option value=""></option>
-                        <option value="0">北京</option>
-                        <option value="1">上海</option>
-                        <option value="2">广州</option>
-                        <option value="3">深圳</option>
-                        <option value="4">杭州</option>
-                    </select>
-                </div>
-            </div>
             <label class="layui-form-label">回访状态</label>
             <div class="layui-input-inline">
                 <div class="layui-input-inline">
                     <select name="visitStatus" lay-verify="required">
-                        <option value="0">等待回访</option>
-                        <option value="1">已回访</option>
-                        <option value="2">全流失</option>
-                        <option value="3">半流失</option>
-                        <option value="4">已预约</option>
+                        <?php if(is_array($visitstatusValue)): foreach($visitstatusValue as $index=>$vo): ?><option value="<?php echo ($index); ?>"><?php echo ($vo['visitstatus']); ?></option><?php endforeach; endif; ?>
+                    </select>
+                </div>
+            </div>
+            <label class="layui-form-label">来院状态</label>
+            <div class="layui-input-inline">
+                <div class="layui-input-inline">
+                    <select name="status" lay-verify="required">
+                        <?php if(is_array($statusValue)): foreach($statusValue as $index=>$vo): ?><option value="<?php echo ($index); ?>"><?php echo ($vo['status']); ?></option><?php endforeach; endif; ?>
                     </select>
                 </div>
             </div>
@@ -77,7 +67,21 @@
         <div class="layui-form-item">
             <label class="layui-form-label">消费金额</label>
             <div class="layui-input-inline">
-                <input type="text" name="money" autocomplete="off" class="layui-input">
+                <input type="text" name="money" placeholder="¥_¥ 必须为数字~" autocomplete="off" class="layui-input">
+            </div>
+            <label class="layui-form-label">就诊项目</label>
+            <div class="layui-input-inline">
+                <div class="layui-input-inline">
+                    <select name="options" lay-verify="required">
+                        <?php if(is_array($diseasesList)): foreach($diseasesList as $index=>$vo): ?><option value="<?php echo ($index); ?>"><?php echo ($vo['diseases']); ?></option><?php endforeach; endif; ?>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit="" lay-filter="fromadd">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
             </div>
         </div>
     </form>
@@ -140,6 +144,12 @@
                 </div>
             </div>
             <div class="layui-form-item">
+                <label class="layui-form-label">性别</label>
+                <div class="layui-input-block">
+                    <input type="checkbox" name="sex" lay-skin="switch" lay-text="女|男">
+                </div>
+            </div>
+            <div class="layui-form-item">
                 <div class="layui-input-block">
                     <button class="layui-btn" lay-submit="" lay-filter="fromadd">立即提交</button>
                     <button type="reset" class="layui-btn layui-btn-primary">重置</button>
@@ -160,6 +170,9 @@
     <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
 </script>
+<script type="text/html" id="sex">
+    <input type="checkbox" name="sex" value="10003" lay-skin="switch" lay-text="女|男" lay-filter="sexDemo" {{sex == on?'':'checked'}}}>
+</script>
 <script>
     layui.use(['table', 'layer', 'form'], () => {
         var table = layui.table;
@@ -176,7 +189,7 @@
             elem: '#container',
             toolbar: '#toolbaradd',
             url: "<?php echo U('Admin/Index/visitCheck');?>",
-            height:'full-0',
+            height:'full-200',
             even:true,
             cellMinWidth:100,
             page: true,
@@ -187,8 +200,9 @@
             cols: [[
                 {type: 'checkbox'},
                 {field: 'id', title: 'No . ', width:80, sort: true}
-                ,{field: 'status', title: '状态', width:80}
+                ,{field: 'status', title: '来院状态', width:80}
                 ,{field: 'username', title: '回访目标', width:100}
+                ,{field: 'sex', title:'性别', width:85, templet: '#sex', unresize: true}
                 ,{field: 'addtime', title: '修改时间', width:177}
                 ,{field: 'phone', title: '咨询电话', width:177}
                 ,{field: 'clientPhone', title: '客户电话', width:177}
@@ -281,6 +295,7 @@
                 'options': data.options,
                 'visitStatus': data.visitStatus,
                 'money': data.money,
+                'sex': data.sex,
             });
             form.render();
         }

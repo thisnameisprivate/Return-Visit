@@ -7,9 +7,12 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="/visit/Public/statics/layui/css/layui.css">
     <link rel="stylesheet" href="/visit/App/Admin/Public/css/index.css">
+    <style>
+        .layui-body{height:100%; width:100%; overflow:hidden;}
+    </style>
     <title>Visit</title>
 </head>
-<body class="layui-layout-body">
+<body class="layui-layout-body" style="overflow-y:hidden;">
 <div class="layui-layout layui-layout-admin">
     <div class="layui-header">
         <div class="layui-logo">Visit</div>
@@ -56,7 +59,7 @@
     </div>
 
     <div class="layui-body">
-        <iframe id="iframe" src="<?php echo U('Admin/Index/echarts');?>" frameborder="0" id="demoAdmin" style="width: 100%; height:100%;"></iframe>
+        <iframe id="iframe" src="<?php echo U('Admin/Index/echarts');?>" frameborder="0" style="height:100%; width:100%;"></iframe>
     </div>
 </div>
 

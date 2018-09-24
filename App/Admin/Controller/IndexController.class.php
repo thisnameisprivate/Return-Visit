@@ -265,8 +265,8 @@ class IndexController extends Controller {
         $data = json_decode($_GET['data'],true);
         $cookie = cookie('tableName');
         $datas = M($cookie);
-        $datas->add($data);
-        if ($data) {
+        $resolve = $datas->add($data);
+        if ($resolve) {
             $this->ajaxReturn(true, 'eval');
         } else {
             $this->ajaxReturn(false, 'eval');
@@ -333,8 +333,10 @@ class IndexController extends Controller {
                 `clientPhone` varchar(20) NOT NULL,
                 `name` varchar(20) NOT NULL,
                 `options` varchar(20) NOT NULL,
+                `visitStatus` varchar(25) NOT NULL,
                 `money` integer NOT NULL DEFAULT 0,
                 `username` varchar(20) NOT NULL DEFAULT 0,
+                `sex` varchar(20) NOT NULL DEFAULT 10003,
                 `addtime` timestamp DEFAULT CURRENT_TIMESTAMP,
                 PRIMARY KEY (`id`)
                 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;	
