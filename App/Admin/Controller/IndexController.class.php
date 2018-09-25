@@ -182,19 +182,19 @@ class IndexController extends Controller {
             if (! $this->createTable($cookieTable)) return false;
         }
         $diseases = M('alldiseases');
-        $diseasesList = $diseases->where("tableName = '{$cookieTable}'")->field('diseases')->select();
+        $diseasesList = $diseases->where("tableName = '{$cookieTable}'")->field('diseases')->order('id')->select();
         $this->assign('diseasesList', $diseasesList);
         // select * from status
         $status = M('status');
-        $statusValue = $status->select();
+        $statusValue = $status->order('id')->select();
         $this->assign('statusValue', $statusValue);
         // select * from visitstatus
         $visitstatus = M('visitstatus');
-        $visitstatusValue = $visitstatus->select();
+        $visitstatusValue = $visitstatus->order('id')->select();
         $this->assign('visitstatusValue', $visitstatusValue);
         // select * from custservice
         $custservice = M('custservice');
-        $custservices = $custservice->select();
+        $custservices = $custservice->order('id')->select();
         $this->assign('custservices', $custservices);
         $this->display();
     }
@@ -219,7 +219,7 @@ class IndexController extends Controller {
         $this->arrayRecursive($hospitalVisit, 'urlencode', true);
         $jsonVisit = urldecode(json_encode($hospitalVisit));
         $interval = ceil($hospitalVistCount / $totalPage);
-        $visitList = "{\"code\":0, \"msg\":\"\", \"count\": $hospitalVistCount, \"data\":$jsonVisit}";
+        $visitList = "{\"code\":0, \"msg\":\"\", \"count\": $hospitalVistCount, \"data\": $jsonVisit}";
         $this->ajaxReturn($visitList, 'eval');
     }
     /*
@@ -264,8 +264,53 @@ class IndexController extends Controller {
     public function addData () {
         $data = json_decode($_GET['data'],true);
         $cookie = cookie('tableName');
+        // data modify. all order desc select
+        if (is_null($data['sex'])) {
+            $data['sex'] = '男';
+        } else {
+            $data['sex'] = '女';
+        }
+        $custservice = M('custservice')->field('custservice')->order('id')->select();
+        $data['name'] = $custservice[$data['name']]['custservice'];
+        $visitStatus = M('visitstatus')->field('visitstatus')->order('id')->select();
+        $data['visitStatus'] = $visitStatus[$data['visitStatus']]['visitstatus'];
+        $status = M('status')->field('status')->order('id')->select();
+        $data['status'] = $status[$data['status']]['status'];
+        $diseases = M('alldiseases')->where("tableName = '{$cookie}'")->field('diseases')->order('id')->select();
+        $data['options'] = $diseases[$data['options']]['diseases'];
         $datas = M($cookie);
         $resolve = $datas->add($data);
+        if ($resolve) {
+            $this->ajaxReturn(true, 'eval');
+        } else {
+            $this->ajaxReturn(false, 'eval');
+        }
+    }
+    /*
+     *  @@ edit tool data
+     *  @param null
+     *  return true or false;
+     * */
+    public function editData () {
+        $data = json_decode($_GET['data'], true);
+        $id = $_GET['id'];
+        $cookie = cookie('tableName');
+        // data modify. all order desc select
+        if (is_null($data['sex'])) {
+            $data['sex'] = '男';
+        } else {
+            $data['sex'] = '女';
+        }
+        $custservice = M('custservice')->field('custservice')->order('id')->select();
+        $data['name'] = $custservice[$data['name']]['custservice'];
+        $visitStatus = M('visitstatus')->field('visitstatus')->order('id')->select();
+        $data['visitStatus'] = $visitStatus[$data['visitStatus']]['visitstatus'];
+        $status = M('status')->field('status')->order('id')->select();
+        $data['status'] = $status[$data['status']]['status'];
+        $diseases = M('alldiseases')->where("tableName = '{$cookie}'")->field('diseases')->order('id')->select();
+        $data['options'] = $diseases[$data['options']]['diseases'];
+        $datas = M($cookie);
+        $resolve = $datas->where("id = '{$id}'")->save($data);
         if ($resolve) {
             $this->ajaxReturn(true, 'eval');
         } else {
@@ -308,7 +353,6 @@ class IndexController extends Controller {
             } else {
                 $array[$key] = $function($value);
             }
-
             if ($apply_to_keys_also && is_string($key)) {
                 $new_key = $function($key);
                 if ($new_key != $key) {
@@ -328,13 +372,13 @@ class IndexController extends Controller {
         $sql = <<<sql
                 CREATE TABLE `$tableName` (
                 `id` int AUTO_INCREMENT,
-                `status` integer NOT NULL DEFAULT 0,
+                `status` varchar(30) NOT NULL DEFAULT 0,
                 `phone` varchar(20) NOT NULL,
                 `clientPhone` varchar(20) NOT NULL,
                 `name` varchar(20) NOT NULL,
                 `options` varchar(20) NOT NULL,
                 `visitStatus` varchar(25) NOT NULL,
-                `money` integer NOT NULL DEFAULT 0,
+                `money` varchar(30) NOT NULL DEFAULT 0,
                 `username` varchar(20) NOT NULL DEFAULT 0,
                 `sex` varchar(20) NOT NULL DEFAULT 10003,
                 `addtime` timestamp DEFAULT CURRENT_TIMESTAMP,

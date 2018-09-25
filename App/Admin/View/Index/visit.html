@@ -23,6 +23,7 @@
     <p>查看信息弹出窗口</p>
 </div>
 <div class="layui-container" id="layerpopEdit" style="display:none;">
+    <p style="display:none" id="idValue"></p>
     <form class="layui-form" lay-filter="formedit">
         <div class="layui-form-item">
             <label class="layui-form-label">回访目标</label>
@@ -87,8 +88,14 @@
             </div>
         </div>
         <div class="layui-form-item">
+            <label class="layui-form-label">性别</label>
             <div class="layui-input-block">
-                <button class="layui-btn" lay-submit="" lay-filter="fromadd">立即提交</button>
+                <input type="checkbox" name="sex" lay-skin="switch" lay-text="女|男">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit="" lay-filter="fromedit">立即提交</button>
                 <button type="reset" class="layui-btn layui-btn-primary">重置</button>
             </div>
         </div>
@@ -186,9 +193,6 @@
     <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
 </script>
-<script type="text/html" id="sex">
-    <input type="checkbox" name="sex" value="10003" lay-skin="switch" lay-text="女|男" lay-filter="sexDemo" {{sex == on?'':'checked'}}}>
-</script>
 <script>
     layui.use(['table', 'layer', 'form'], () => {
         var table = layui.table;
@@ -207,8 +211,8 @@
             url: "{:U('Admin/Index/visitCheck')}",
             height:'full-200',
             even:true,
+            page:true,
             cellMinWidth:100,
-            page: true,
             limit: 25,
             limits: [25, 40, 60, 90, 150, 200],
             loading: true,
@@ -218,7 +222,7 @@
                 {field: 'id', title: 'No . ', width:80, sort: true}
                 ,{field: 'status', title: '来院状态', width:80}
                 ,{field: 'username', title: '回访目标', width:100}
-                ,{field: 'sex', title:'性别', width:85, templet: '#sex', unresize: true}
+                ,{field: 'sex', title:'性别', width:85}
                 ,{field: 'addtime', title: '修改时间', width:177}
                 ,{field: 'phone', title: '咨询电话', width:177}
                 ,{field: 'clientPhone', title: '客户电话', width:177}
@@ -233,7 +237,6 @@
         });
         table.on('tool(edittable)', obj => {
             var data = obj.data;
-            console.log(data);
             var layEvent = obj.event;
             var tr = obj.tr;
             if (layEvent === 'detail') { // check tool data
@@ -261,6 +264,7 @@
                     }
                 });
             } else if (layEvent === 'edit') { // edit tool data
+                document.getElementById('idValue').innerHTML = data.id;
                 layer.open({
                     type: 1,
                     title: '编辑信息',
@@ -268,9 +272,23 @@
                     content: document.getElementById('layerpopEdit').innerHTML,
                 });
                 setFormValue(data);
-                obj.update({
-
-                })
+                form.on('submit(fromedit)', data => {
+                    var id = document.getElementById('idValue').innerHTML;
+                    var client = new XMLHttpRequest();
+                    client.open('GET', "{:U('Admin/index/editData/id/" + parseInt(id) + "/data/"+ JSON.stringify(data.field) +"')}");
+                    client.send();
+                    client.onreadystatechange = () => {
+                        if (client.readyState === 4 && client.status === 200) {
+                            if (client.response === 1) {
+                                layer.msg('add success', {icon: 6});
+                                layer.closeAll('page');
+                                tableIns.reload();
+                            } else {
+                                layer.msg('add failed', {icon: 5});
+                            }
+                        }
+                    }
+                });
             }
         });
         table.on('toolbar(edittable)', obj => {
@@ -304,6 +322,7 @@
         /* 渲染form表单 */
         function setFormValue (data) {
             form.val('formedit', {
+                'username': data.username,
                 'status': data.status,
                 'phone': data.phone,
                 'clientPhone': data.clientPhone,
