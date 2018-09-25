@@ -9,15 +9,17 @@
     <link rel="stylesheet" href="__ROOT__/App/Admin/Public/css/visit.css">
     <style>
         .container{position:relative; width:900px; height: 500px; top:0; left:0; bottom:0; right:0; margin:auto; padding-top: 50px;}
-        body{overflow-y: scroll; margin-left:20px; margin-top:20px;}
+        body{overflow-y: scroll; margin-top:20px;}
     </style>
     <title>visit</title>
 </head>
 <body>
 <div class="layui-inline">
-    <input class="layui-input" name="search" id="search" placeholder="请输入要搜索的信息~" autocomplete="off">
+    <form class="layui-form">
+        <input class="layui-input" name="search" id="search" required lay-verify="required" placeholder="姓名/客户电话" autocomplete="off">
+    </form>
 </div>
-<button class="layui-btn" data-type="reload">搜索</button>
+<button id="searchbtn" class="layui-btn" data-type="reload">搜索</button>
 <table id="container" lay-filter="edittable"></table>
 <div class="layui-container" id="layerpopCheck" style="display:none;">
     <p>查看信息弹出窗口</p>
@@ -28,7 +30,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label">回访目标</label>
             <div class="layui-input-inline">
-                <input type="text" name="username" lay-veify="required" placeholder="请输入病人名字或昵称~" autocomplete="off" class="layui-input">
+                <input type="text" name="username" lay-verify="required" placeholder="请输入病人名字或昵称~" autocomplete="off" class="layui-input">
             </div>
             <label class="layui-form-label">回访电话</label>
             <div class="layui-input-inline">
@@ -211,9 +213,9 @@
             toolbar: '#toolbaradd',
             url: "{:U('Admin/Index/visitCheck')}",
             height:'full-200',
-            even: true,
-            page:true,
+            page: true,
             cellMinWidth:100,
+            even: true,
             limit: 25,
             limits: [25, 50, 75],
             loading: true,
@@ -323,8 +325,28 @@
                 });
             }
         });
+        /* search  */
+        var search = document.getElementById('searchbtn').onclick = () => {
+            var value = document.getElementById('search').value;
+            if (value == '') {
+                layer.msg('请输入要搜索的信息', {icon: 16});
+                tableIns.reload({
+                    where: {search: null}
+                });
+                layer.close(layer.index);
+            }
+            if (value != '') {
+                layer.msg('数据请求中...', {icon: 16});
+                tableIns.reload({
+                    page: {curr: 1},
+                    where: {search: value}
+                });
+                layer.close(layer.index);
+                document.getElementById('search').value = '';
+            }
+        }
         /* 渲染form表单 */
-        function setFormValue (data) {
+        setFormValue = data => {
             form.val('formedit', {
                 'username': data.username,
                 'status': data.status,

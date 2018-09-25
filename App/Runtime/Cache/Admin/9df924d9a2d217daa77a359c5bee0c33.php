@@ -59,7 +59,7 @@
     </div>
 
     <div class="layui-body">
-        <iframe id="iframe" src="<?php echo U('Admin/Index/echarts');?>" frameborder="0" style="height:100%; width:100%;"></iframe>
+        <iframe id="iframe" src="<?php echo U('Admin/Index/echarts');?>" frameborder="0" style="height:105%; width:91.2%;"></iframe>
     </div>
 </div>
 
