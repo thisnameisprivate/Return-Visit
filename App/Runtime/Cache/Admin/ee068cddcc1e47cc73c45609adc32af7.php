@@ -16,7 +16,7 @@
 <body>
 <div class="layui-inline">
     <form class="layui-form">
-        <input class="layui-input" name="search" id="search" placeholder="姓名/客户电话" autocomplete="off">
+        <input class="layui-input" name="search" id="search" required lay-verify="required" placeholder="姓名/客户电话" autocomplete="off">
     </form>
 </div>
 <button id="searchbtn" class="layui-btn" data-type="reload">搜索</button>
