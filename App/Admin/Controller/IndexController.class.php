@@ -212,10 +212,8 @@ class IndexController extends Controller {
     public function visitCheck () {
         $cookieTable = cookie('tableName');
         $hospital = M($cookieTable);
-        $page = $_GET['page'];
         $hospitalVistCount = $hospital->count();
-        $totalPage = 25;
-        $hospitalVisit = $hospital->limit(($page - 1) * $totalPage, $totalPage)->order('id desc')->select();
+        $hospitalVisit = $hospital->limit(($page = $_GET['page'] -1) * $limit = $_GET['limit'], $limit = $_GET['limit'])->order('id desc')->select();
         $this->arrayRecursive($hospitalVisit, 'urlencode', true);
         $jsonVisit = urldecode(json_encode($hospitalVisit));
         $interval = ceil($hospitalVistCount / $totalPage);

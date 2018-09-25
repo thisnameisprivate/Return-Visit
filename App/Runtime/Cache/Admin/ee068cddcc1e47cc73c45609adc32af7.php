@@ -178,27 +178,28 @@
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
 </script>
 <script>
-    layui.use(['table', 'layer', 'form'], () => {
+    layui.use(['table', 'layer', 'laypage', 'form'], () => {
         var table = layui.table;
         var layer = layui.layer;
         var form = layui.form;
+        var laypage = layui.laypage;
         var tableIns = table.render({
             text: {
                 none: '暂无相关数据',
             },
             initSort: {
-              field: 'id',
-              type: 'desc',
+                field: 'id',
+                type: 'desc',
             },
             elem: '#container',
             toolbar: '#toolbaradd',
             url: "<?php echo U('Admin/Index/visitCheck');?>",
             height:'full-200',
-            even:true,
+            even: true,
             page:true,
             cellMinWidth:100,
             limit: 25,
-            limits: [25, 40, 60, 90, 150, 200],
+            limits: [25, 50, 75],
             loading: true,
             size: 'sm',
             cols: [[
@@ -218,6 +219,9 @@
                 ,
             ]],
             id: 'edittable',
+            done: function () {
+
+            }
         });
         table.on('tool(edittable)', obj => {
             var data = obj.data;
