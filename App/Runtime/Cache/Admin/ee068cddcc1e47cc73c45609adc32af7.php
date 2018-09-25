@@ -16,7 +16,7 @@
 <body>
 <div class="layui-inline">
     <form class="layui-form">
-        <input class="layui-input" name="search" id="search" required lay-verify="required" placeholder="姓名/客户电话" autocomplete="off">
+        <input class="layui-input" name="search" id="search" placeholder="姓名/客户电话" autocomplete="off">
     </form>
 </div>
 <button id="searchbtn" class="layui-btn" data-type="reload">搜索</button>
@@ -175,7 +175,7 @@
     </div>
 </script>
 <script type="text/html" id="bar">
-    <a class="layui-btn layui-btn-xs" lay-event="detail">查看</a>
+    <!--<a class="layui-btn layui-btn-xs" lay-event="detail">查看</a>-->
     <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
 </script>
@@ -310,7 +310,7 @@
             }
         });
         /* search  */
-        var search = document.getElementById('searchbtn').onclick = () => {
+        document.getElementById('searchbtn').onclick = () => {
             var value = document.getElementById('search').value;
             if (value == '') {
                 layer.msg('请输入要搜索的信息', {icon: 16});

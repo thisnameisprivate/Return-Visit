@@ -214,15 +214,15 @@ class IndexController extends Controller {
         $hospital = M($cookieTable);
         if ($_GET['search'] == '') { // search...
             $hospitalVistCount = $hospital->count();
-            $hospitalVisit = $hospital->limit(($page = $_GET['page'] -1) * $limit = $_GET['limit'], $limit = $_GET['limit'])->order('id desc')->select();
+            $hospitalVisit = $hospital->limit(($page = $_GET['page'] - 1) * $_GET['limit'], $_GET['limit'])->order('id desc')->select();
         } else {
             if (is_string($_GET['search'])) {
                 $hospitalVistCount = $hospital->where("username = '{$_GET['search']}'")->count();
-                $hospitalVisit = $hospital->where("username = '{$_GET['search']}'")->limit(($page = $_GET['page'] -1) * $limit = $_GET['limit'], $limit = $_GET['limit'])->order('id desc')->select();
+                $hospitalVisit = $hospital->where("username = '{$_GET['search']}'")->limit(($page = $_GET['page'] - 1) * $_GET['limit'], $_GET['limit'])->order('id desc')->select();
             }
             if (is_numeric($_GET['search'])) {
                 $hospitalVistCount = $hospital->where("clientPhone = '{$_GET['search']}'")->count();
-                $hospitalVisit = $hospital->where("clientPhone = '{$_GET['search']}'")->limit(($page = $_GET['page'] -1) * $limit = $_GET['limit'], $limit = $_GET['limit'])->order('id desc')->select();
+                $hospitalVisit = $hospital->where("clientPhone = '{$_GET['search']}'")->limit(($page = $_GET['page'] - 1) * $_GET['limit'], $_GET['limit'])->order('id desc')->select();
             }
         }
         $this->arrayRecursive($hospitalVisit, 'urlencode', true);
