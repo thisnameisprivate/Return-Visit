@@ -9,17 +9,21 @@
     <link rel="stylesheet" href="__ROOT__/App/Admin/Public/css/index.css">
     <style>
         .layui-body{height:100%; width:100%; overflow:hidden;}
+        .layui-layout-admin .layui-header{background: #2F4056;}
     </style>
     <title>Visit</title>
+    <script type="text/javascript">
+        document.cookie = "tableName=nkvisit";
+    </script>
 </head>
 <body class="layui-layout-body" style="overflow-y:hidden;">
 <div class="layui-layout layui-layout-admin">
     <div class="layui-header">
-        <div class="layui-logo">Visit</div>
+        <div class="layui-logo">回访数据管理系统</div>
         <!-- 头部区域（可配合layui已有的水平导航） -->
         <ul class="layui-nav layui-layout-right">
             <li class="layui-nav-item">
-                <a href="javascript:;" class="layui-anim layui-anim-up layui-this" id="classification">选择医院科室</a>
+                <a href="javascript:;" class="layui-anim layui-anim-up layui-this" id="classification">广元协和医院男科</a>
                 <dl class="layui-nav-child">
 
                     <foreach name="hospitals" item="vo" key="index">
@@ -28,13 +32,7 @@
 
                 </dl>
             </li>
-            <li class="layui-nav-item">
-                <a href="javascript:;">
-                    <img src="http://t.cn/RCzsdCq" class="layui-nav-img">
-                    贤心
-                </a>
-            </li>
-            <li class="layui-nav-item"><a href="">注销</a></li>
+            <li class="layui-nav-item"><a href="javascript:;">注销</a></li>
         </ul>
     </div>
 
@@ -43,17 +41,17 @@
             <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
             <ul class="layui-nav layui-nav-tree"  lay-filter="test">
                 <li class="layui-nav-item tableName" onclick="editdata(this);">
-                    <a href="javascript:;">回访数据总览</a>
+                    <a href="javascript:;"><i class="layui-icon layui-icon-table" style="font-size: 18px;">   </i>回访数据总览</a>
                 </li>
                 <li class="layui-nav-item layui-nav-itemed tableName" id="charts">
-                    <a class="" href="javascript:;">回访趋势图</a>
+                    <a class="" href="javascript:;" onclick="echarts();"><i class="layui-icon layui-icon-chart-screen" style="font-size: 18px;">   </i>回访趋势图</a>
                 </li>
                 <li class="layui-nav-item">
-                    <a href="javascript:;">系统管理</a>
+                    <a href="javascript:;"><i class="layui-icon layui-icon-app" style="font-size: 18px;">   </i>系统管理</a>
                     <dl class="layui-nav-child">
-                        <dd class="tableName" onclick="custservice();"><a href="javascript:;">客服管理</a></dd>
-                        <dd class="tableName" onclick="departMent(this);"><a href="javascript:;">科室管理</a></dd>
-                        <dd class="tableName" onclick="user();"><a href="javascript:;">用户管理</a></dd>
+                        <dd class="tableName" onclick="custservice();"><a href="javascript:;"><i class="layui-icon layui-icon-headset" style="font-size: 18px;">   </i>客服管理</a></dd>
+                        <dd class="tableName" onclick="departMent(this);"><a href="javascript:;"><i class="layui-icon layui-icon-form" style="font-size: 18px;">   </i>科室管理</a></dd>
+                        <dd class="tableName" onclick="user();"><a href="javascript:;"><i class="layui-icon layui-icon-user" style="font-size: 18px;">   </i>用户管理</a></dd>
                     </dl>
                 </li>
             </ul>
@@ -67,14 +65,13 @@
 
 <div style="position:fixed; bottom:0px; left:200px; z-index:999; font-size:12px; font-weight:600;">
     <!-- 底部固定区域 -->
-    <a href="javascript:;" title="发布日期: 2018/8/1日:) Github: https://github.com/thisnameisprivate"><span class="layui-icon layui-icon-website layui-anim layui-anim-fadein layui-anim-loop"></span>&nbsp;&nbsp;&nbsp;广元协和医院预约回访管理系统 ©</a>
+    <a href="javascript:;" title="发布日期: 2018/10/1日:)"><span class="layui-icon layui-icon-website layui-anim layui-anim-fadein layui-anim-loop"></span>&nbsp;&nbsp;&nbsp;广元协和医院预约回访管理系统 ©</a>
 </div>
 </body>
 <script src="__PUBLIC__/statics/layui/layui.js"></script>
 <script>
     layui.use(['element', 'layer', 'form'], () => {
         var layer = layui.layer;
-        layer.msg("Please Select Hospital.");
         departMent = tableName => {
             var Request = new XMLHttpRequest();
             Request.open('GET', "{:U('Admin/Index/departMent')}");
@@ -122,6 +119,14 @@
             Request.send();
             Request.onreadystatechange = () => {
                 document.getElementById('iframe').setAttribute('src', "{:U('Admin/Index/user')}");
+            }
+        }
+        echarts = () => {
+            var Request = new XMLHttpRequest();
+            Request.open('GET', "{:U('Admin/Index/echarts')}");
+            Request.send();
+            Request.onreadystatechange = () => {
+                document.getElementById('iframe').setAttribute('src', "{:U('Admin/Index/echarts')}");
             }
         }
         readyHospital = tableName => {

@@ -202,7 +202,52 @@ class IndexController extends Controller {
      *  Home page
      * */
     public function echarts () {
+        $cookie = cookie('tableName');
+        $custservice = M('custservice');
+        $customer = $custservice->field('custservice')->select();
+        foreach($customer as $k => $v) {
+            foreach ($v as $c => $d) {
+                $customers[] =  $d;
+            }
+        }
+        $master = M($cookie);
+        $loading = $master->where("status = '等待' AND date_format(addtime, '%Y-%m') = DATE_FORMAT(CURDATE(), '%Y-%m')")->count();
+        $arrived = $master->where("status = '已到' AND date_format(addtime, '%Y-%m') = DATE_FORMAT(CURDATE(), '%Y-%m')")->count();
+        $arrivedOut = $master->where("status = '未到' AND date_format(addtime, '%Y-%m') = DATE_FORMAT(CURDATE(), '%Y-%m')")->count();
+        $reserUnde = $master->where("status = '预约未定' AND date_format(addtime, '%Y-%m') = DATE_FORMAT(CURDATE(), '%Y-%m')")->count();
+        $loss = $master->where("status = '全流失' AND date_format(addtime, '%Y-%m') = DATE_FORMAT(CURDATE(), '%Y-%m')")->count();
+        $halfLoss = $master->where("status = '半流失' AND date_format(addtime, '%Y-%m') = DATE_FORMAT(CURDATE(), '%Y-%m')")->count();
+        $hasBeen = $master->where("status = '已诊治' AND date_format(addtime, '%Y-%m') = DATE_FORMAT(CURDATE(), '%Y-%m')")->count();
+        $data['loading'] = $loading;
+        $data['arrived'] = $arrived;
+        $data['arrivedOut'] = $arrivedOut;
+        $data['reserUnde'] = $reserUnde;
+        $data['loss'] = $loss;
+        $data['halfLoss'] = $halfLoss;
+        $data['hasBeen'] = $hasBeen;
+
+        for ($i = 0; $i < count($customers); $i ++) {
+            $No[$customers[$i]] = $master->where("name = '{$customers[$i]}' and status = '已到' AND date_format(addtime, '%Y-%m') = DATE_FORMAT(CURDATE(), '%Y-%m')")->count();
+        }
+        arsort($No, SORT_NUMERIC);
+        foreach ($No as $k => $v) {
+            $name[] = $k;
+            $sort[] = $v;
+        }
+        array_splice($name, 5);
+        $this->assign('name', $name);
+        $name = implode('\',\'', $name);
+        $name = "'{$name}'";
+        $this->assign('names', $name);
+        $this->assign('sort', $sort);
+        $this->assign('data', $data);
         $this->display();
+    }
+    /*
+     *  doubble sort
+     * */
+    private function sort () {
+
     }
     /*
      *  @@ interval page
@@ -217,12 +262,14 @@ class IndexController extends Controller {
             $hospitalVisit = $hospital->limit(($page = $_GET['page'] - 1) * $_GET['limit'], $_GET['limit'])->order('id desc')->select();
         } else {
             if (is_string($_GET['search'])) {
-                $hospitalVistCount = $hospital->where("username = '{$_GET['search']}'")->count();
-                $hospitalVisit = $hospital->where("username = '{$_GET['search']}'")->limit(($page = $_GET['page'] - 1) * $_GET['limit'], $_GET['limit'])->order('id desc')->select();
+                $username['username'] = array('like', "%{$_GET['search']}%");
+                $hospitalVistCount = $hospital->where($username)->count();
+                $hospitalVisit = $hospital->where($username)->limit(($page = $_GET['page'] - 1) * $_GET['limit'], $_GET['limit'])->order('id desc')->select();
             }
             if (is_numeric($_GET['search'])) {
-                $hospitalVistCount = $hospital->where("clientPhone = '{$_GET['search']}'")->count();
-                $hospitalVisit = $hospital->where("clientPhone = '{$_GET['search']}'")->limit(($page = $_GET['page'] - 1) * $_GET['limit'], $_GET['limit'])->order('id desc')->select();
+                $phone['clientPhone'] = array('like', "%{$_GET['search']}%");
+                $hospitalVistCount = $hospital->where($phone)->count();
+                $hospitalVisit = $hospital->where($phone)->limit(($page = $_GET['page'] - 1) * $_GET['limit'], $_GET['limit'])->order('id desc')->select();
             }
         }
         $this->arrayRecursive($hospitalVisit, 'urlencode', true);
