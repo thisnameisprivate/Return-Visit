@@ -294,6 +294,10 @@
                             }
                         }
                     }
+                    // 由于thinkphp修改了url为兼容模式,导致添加数据过后跳转到登陆页面:(... 未知bug,先这样勉强算修复了.但是现在没有添加成功和失败的弹出框了... Server 环境太老了,只兼容thinkphp3.2.2
+                    var parent = window.parent.document.getElementById('iframe');
+                    parent.setAttribute("src", "/visit/index.php?s=/Admin/Index/visit");
+                    return false;
                 });
             }
         });
