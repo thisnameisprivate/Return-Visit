@@ -276,6 +276,8 @@ class IndexController extends Controller {
         $jsonVisit = urldecode(json_encode($hospitalVisit));
         $interval = ceil($hospitalVistCount / $totalPage);
         $visitList = "{\"code\":0, \"msg\":\"\", \"count\": $hospitalVistCount, \"data\": $jsonVisit}";
+        print_r($visitList);
+        exit;
         $this->ajaxReturn($visitList, 'eval');
     }
     /*
@@ -319,6 +321,7 @@ class IndexController extends Controller {
      * */
     public function addData () {
         $data = json_decode($_GET['data'],true);
+        print_r($data);
         $cookie = cookie('tableName');
         // data modify. all order desc select
         if (is_null($data['sex'])) {

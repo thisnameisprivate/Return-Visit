@@ -94,13 +94,7 @@
                     {value:<?php echo ($sort[3]); ?>, name: "<?php echo ($name[3]); ?>"},
                     {value:<?php echo ($sort[4]); ?>, name: "<?php echo ($name[4]); ?>"},
                 ],
-                itemStyle: {
-                    emphasis: {
-                        shadowBlur: 10,
-                        shadowOffsetX: 0,
-                        shadowColor: 'rgba(0, 0, 0, 0.5)'
-                    }
-                }
+                
             }
         ]
     })

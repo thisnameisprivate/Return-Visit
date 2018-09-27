@@ -306,6 +306,11 @@
                             }
                         }
                     }
+                    var parent = window.parent.document.getElementById('iframe');
+                    console.log(parent.getAttribute('src'));
+                    parent.setAttribute("src", "/visit/index.php?s=/Admin/Index/visit");
+                    console.log(parent.getAttribute('src'));
+                    return false;
                 });
             }
         });
