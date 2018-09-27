@@ -8,22 +8,17 @@
     <title>visit echarts</title>
     <style>
         .container{height:900px; width:1700px;}
-        #content{height:100%; width:40%; float:left;}
-        #content #pie{height:50%; width:100%;}
-        #content #pie2{height:50%; width:100%;}
-        .container #img{height:100%; width:50%; float:right;}
-        .container #img img{height:75%; width:48%; margin-top:100px;}
+        #pie{height:660px; width:50%; float:left;}
+        #pie2{height:660px; width:50%; float:right;}
     </style>
 </head>
 <body>
 <div class="container">
-    <div id="content">
-        <div id="pie"></div>
-        <div id="pie2"></div>
-    </div>
-    <div id="img">
-        <img src="/visit/Public/statics/images/right.jpg" alt="">
-    </div>
+    <div id="pie"></div>
+    <div id="pie2"></div>
+    <!--<div id="img">-->
+        <!--<img src="/visit/Public/statics/images/right.jpg" alt="">-->
+    <!--</div>-->
 </div>
 </body>
 <script src="/visit/Public/statics/js/echart.js"></script>
