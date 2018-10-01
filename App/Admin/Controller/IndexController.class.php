@@ -276,8 +276,6 @@ class IndexController extends Controller {
         $jsonVisit = urldecode(json_encode($hospitalVisit));
         $interval = ceil($hospitalVistCount / $totalPage);
         $visitList = "{\"code\":0, \"msg\":\"\", \"count\": $hospitalVistCount, \"data\": $jsonVisit}";
-        print_r($visitList);
-        exit;
         $this->ajaxReturn($visitList, 'eval');
     }
     /*
@@ -288,7 +286,8 @@ class IndexController extends Controller {
     public function delete () {
         if (! is_numeric($_GET['id'])) return false;
         $id = $_GET['id'];
-        $delData = M('nkvisit');
+        $cookie = cookie('tableName');
+        $delData = M($cookie);
         $resolve = $delData->where("id = $id")->delete();
         if ($resolve) {
             $this->ajaxReturn(true, 'eval');
