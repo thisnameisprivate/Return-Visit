@@ -244,12 +244,6 @@ class IndexController extends Controller {
         $this->display();
     }
     /*
-     *  doubble sort
-     * */
-    private function sort () {
-
-    }
-    /*
      *  @@ interval page
      *  @param null
      *  return $visitList Type: json
