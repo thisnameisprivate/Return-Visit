@@ -6,13 +6,46 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>visit echarts</title>
+    <link rel="stylesheet" href="/visit/Public/statics/layui/css/layui.css">
     <style>
-        .container{height:900px; width:1700px;}
-        #pie{height:660px; width:50%; float:left;}
-        #pie2{height:660px; width:50%; float:right;}
+        /*.container{height:900px; width:1700px;}*/
+        /*#pie{height:660px; width:50%; float:left;}*/
+        /*#pie2{height:660px; width:50%; float:right;}*/
+        .container{display: flex; justify-content: center; height:500px; width:100%;}
+        .container div{flex: 1;}
+        .container-title{display:flex; justify-content: center; width:100%;}
+        .container-title div{flex: 1; margin: 20px; margin-top: 20px;}
+        .layui-card-body{font-size: 24px; text-align: center; color: #009688;}
+        .layui-card-header{background-color: #5FB878; color: white;}
     </style>
 </head>
 <body>
+<div class="container-title">
+    <div class="layui-card">
+        <div class="layui-card-header">客服</div>
+        <div class="layui-card-body">
+            <i class="layui-icon layui-icon-user" style="font-size: 40px; color: #009688;">    </i><?php echo ($custServiceCount?$custServiceCount:'暂无相关数据'); ?>
+        </div>
+    </div>
+    <div class="layui-card">
+        <div class="layui-card-header">总消费</div>
+        <div class="layui-card-body">
+            <i class="layui-icon layui-icon-rmb" style="font-size: 40px; color: #009688">    </i>¥<?php echo ($moneyCount?$moneyCount:'暂无相关数据'); ?>
+        </div>
+    </div>
+    <div class="layui-card">
+        <div class="layui-card-header">已到</div>
+        <div class="layui-card-body">
+            <i class="layui-icon layui-icon-flag" style="font-size: 40px; color: #009688">    </i><?php echo ($arrival?$arrival:'暂无相关数据'); ?>
+        </div>
+    </div>
+    <div class="layui-card">
+        <div class="layui-card-header">未到</div>
+        <div class="layui-card-body">
+            <i class="layui-icon layui-icon-survey" style="font-size: 40px; color: #009688">    </i><?php echo ($arrivalo?$arrivalo:'暂无相关数据'); ?>
+        </div>
+    </div>
+</div>
 <div class="container">
     <div id="pie"></div>
     <div id="pie2"></div>

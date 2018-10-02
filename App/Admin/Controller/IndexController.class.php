@@ -241,6 +241,14 @@ class IndexController extends Controller {
         $this->assign('names', $name);
         $this->assign('sort', $sort);
         $this->assign('data', $data);
+        $custServiceCount = M('custservice')->count();
+        $moneyCount = $master->sum("money");
+        $arrival = $master->where("status = '已到'")->count();
+        $arrivalo = $master->where("status = '未到'")->count();
+        $this->assign('moneyCount', $moneyCount);
+        $this->assign('arrival', $arrival);
+        $this->assign('arrivalo', $arrivalo);
+        $this->assign('custServiceCount', $custServiceCount);
         $this->display();
     }
     /*
