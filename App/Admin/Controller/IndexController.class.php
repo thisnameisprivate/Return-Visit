@@ -5,7 +5,6 @@ class IndexController extends Controller {
     /*
      *  @@ hospitals select 首页科室选择下拉框
      *  @param null
-     *  return display
      * */
     public function index () {
         $hospital = M('hospital');
@@ -171,7 +170,6 @@ class IndexController extends Controller {
     /*
      *  @@ login success
      *  @Pparam null
-     *  return display
      * */
     public function visit () {
         $cookieTable = cookie('tableName');
