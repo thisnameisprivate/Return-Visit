@@ -423,7 +423,7 @@ class IndexController extends Controller {
     }
     /*
      *  create new table
-     *  @param tableName
+     *  @param tableName cookie tableName.
      *  return true or false
      * */
     public function createTable ($tableName) {
