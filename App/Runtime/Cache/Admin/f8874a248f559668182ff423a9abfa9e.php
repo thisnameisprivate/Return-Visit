@@ -14,8 +14,8 @@
         .container{display: flex; justify-content: center; height:500px; width:100%;}
         .container div{flex: 1;}
         .container-title{display:flex; justify-content: center; width:100%;}
-        .container-title div{flex: 1; margin: 20px; margin-top: 20px;}
-        .layui-card-body{font-size: 24px; text-align: center; color: #009688;}
+        .container-title div{flex: 1; margin: 2%; margin-top: 2%;}
+        .layui-card-body{font-size: 1rem; text-align: center; color: #009688;}
         .layui-card-header{background-color: #5FB878; color: white;}
     </style>
 </head>
